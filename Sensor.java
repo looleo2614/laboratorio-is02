@@ -1,5 +1,6 @@
 import java.util.Random;
-
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Sensor{
     private String id;
@@ -54,5 +55,23 @@ class SensorTemperatura extends Sensor{
 }
 
 class EstacionMonitoreo extends Sensor{
-
+ private List<Sensor> sensores;
+ public EstacionMonitoreo(){
+    sensores=new ArrayList<>();
+ }
+ public void sumarSensor(Sensor sensor){
+    sensores.add(sensor);
+ }
+ public void procesarLecturas(){
+    for(Sensor sensor:sensores){
+        if (sensor.activo()){
+            double lectura = sensor.tomarLectura();
+            System.out.println("Sensor: "+sensor.id
+                +" ubicacion: "+sensor.ubicacion
+                +" lectura: "+String.format("%.2f",lectura)
+                +" estado: "+sensor.evaluarEstado()
+            );
+        }
+    }
+ }
 }

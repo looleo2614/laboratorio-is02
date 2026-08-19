@@ -137,9 +137,9 @@ Si me respondes eso, podemos determinar qué nivel de protección necesita tu di
 
 (3)
 Pregunta: 
-que librerias son utiles para implementar listas y para generar numeros aleatorios en java?
+-Que librerias son utiles para implementar listas y para generar numeros aleatorios en java?
 Respuesta:
-Para trabajar con listas en Java, piensa primero en las estructuras que ofrece la biblioteca estándar. No necesitas una librería externa.
+-Para trabajar con listas en Java, piensa primero en las estructuras que ofrece la biblioteca estándar. No necesitas una librería externa.
 Las principales
 java.util
    │
@@ -166,3 +166,41 @@ java.util
       └── identificadores aleatorios
 
 -Con este implemente las listas de monitoreo de los sensores, y poder usar una libreria para generar numeros aleatorios, y asi implementarlo en los datos que se agregen a esta lista, de modo que el programa pueda indicar si estan en estado critico o en rangos nomrales.
+
+(4)
+Pregunta:
+¿Cómo gestiona Java el despacho dinámico de métodos (Polimorfismo) internamente a diferencia de las tablas virtuales
+(vtable) de C++ y qué riesgos de memoria desaparecen con el Garbage Collector?" 
+Respuesta: 
+Polimorfismo y gestión de memoria: Java implementa el despacho dinámico determinando en tiempo de ejecución la clase real del objeto y ejecutando el método sobrescrito correspondiente. A diferencia de C++, donde comúnmente se utilizan vtable para las funciones virtuales, Java deja estos detalles a la JVM y sus optimizaciones. Además, el Garbage Collector libera automáticamente la memoria de objetos que ya no son alcanzables, reduciendo problemas como memory leaks por liberación manual, double delete y dangling pointers. Sin embargo, Java no elimina todos los problemas de memoria, ya que mantener referencias innecesarias puede provocar fugas de memoria lógicas.
+
+-Detalles a considerar en el uso de las herencias y el manejo de memoria dinamica al usar las listas de monitoreo de sensores. 
+
+(5)
+Pregunta:
+¿Mi implementación cumple con el Principio de Abierto/Cerrado (OCP) de SOLID si mañana la empresa decide integrar Sensores de Calidad del Aire?"   
+class EstacionMonitoreo extends Sensor{
+ private List<Sensor> sensores;
+ public EstacionMonitoreo(){
+    sensores=new ArrayList<>();
+ }
+ public void sumarSensor(Sensor sensor){
+    sensores.add(sensor);
+ }
+ public void procesarLecturas(){
+    for(Sensor sensor:sensores){
+        if (sensor.activo()){
+            double lectura = sensor.tomarLectura();
+            System.out.println("Sensor: "+sensor.id
+                +" ubicacion: "+sensor.ubicacion
+                +" lectura: "+String.format("%.2f",lectura)
+                +" estado: "+sensor.evaluarEstado()
+            );
+        }
+    }
+ }
+Respuesta:
+Sí, tu diseño va bien encaminado hacia OCP, especialmente por utilizar List<Sensor> y polimorfismo.
+Principio Abierto/Cerrado (OCP): La implementación cumple en gran medida con OCP porque EstacionMonitoreo trabaja con la abstracción Sensor y no depende de tipos concretos como SensorHumedadSuelo o SensorTemperatura. Por lo tanto, para agregar un nuevo SensorCalidadAire, idealmente solo sería necesario crear una nueva subclase que implemente los comportamientos definidos por Sensor, sin modificar EstacionMonitoreo. Esto permite extender el sistema sin alterar su lógica existente.
+
+-En la respuesta completa tambien me detallo ciertas medidas que no tuve en cuenta, como poner funciones get, para poder usar los atributos privados heredados de la clase Sensor. 
